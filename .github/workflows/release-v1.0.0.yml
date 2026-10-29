@@ -1,0 +1,75 @@
+name: Release v1.0.0 from main
+
+on:
+  push:
+    branches: [dev]
+    paths: [.github/workflows/release-v1.0.0.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    # One-time release; ordinary dev commits never publish a release.
+    if: github.run_number == 1
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_SHA: 19568a6e8f722856d8ed9b568404c903034e1040
+    steps:
+      - name: Check out the minimal main commit
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: 19568a6e8f722856d8ed9b568404c903034e1040
+          persist-credentials: false
+      - name: Verify and package main
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$RELEASE_SHA"
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          from pathlib import Path
+          from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
+
+          expected = {'LICENSE', 'README.md', 'dictionary.svg', 'info.json', 'main.js'}
+          tracked = set(subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', 'HEAD'], text=True).splitlines())
+          assert tracked == expected, f'Unexpected main files: {tracked}'
+          info = json.loads(Path('info.json').read_text())
+          assert info['version'] == '1.0.0'
+          assert info['plugin_type'] == 'translate'
+          files = ['main.js', 'info.json', info['icon'], 'LICENSE']
+          output = Path('dist')
+          output.mkdir(exist_ok=True)
+          package = output / (info['id'] + '.potext')
+          with ZipFile(package, 'w', ZIP_DEFLATED) as archive:
+              for name in files:
+                  entry = ZipInfo(name, date_time=(2026, 10, 30, 0, 0, 0))
+                  entry.compress_type = ZIP_DEFLATED
+                  entry.external_attr = 0o100644 << 16
+                  archive.writestr(entry, Path(name).read_bytes())
+          with ZipFile(package) as archive:
+              assert archive.testzip() is None
+              assert set(archive.namelist()) == set(files)
+              for name in files:
+                  assert archive.read(name) == Path(name).read_bytes()
+          digest = hashlib.sha256(package.read_bytes()).hexdigest()
+          (output / 'SHA256SUMS').write_text(f'{digest}  {package.name}\n')
+          Path('release-notes.md').write_text(
+              'Google Translate dictionary plugin for Pot.\n\n'
+              '- Dictionary meanings, definitions, synonyms, and examples when available.\n'
+              '- Dictionary cards or copyable full-text output.\n'
+              '- Sentence translation fallback.\n\n'
+              'Download the `.potext` asset and install it in Pot.\n\n'
+              'Uses an unofficial Google endpoint; network access is required and HTTP 429 blocks may occur.\n\n'
+              'Built only from main commit `19568a6e8f722856d8ed9b568404c903034e1040`. '
+              'Tests and development tools are excluded from the package.\n'
+          )
+          PY
+      - name: Publish release tagged at main
+        shell: bash
+        run: |
+          gh release create v1.0.0 dist/plugin.local.google-dictionary.potext dist/SHA256SUMS \
+            --target "$RELEASE_SHA" --title "v1.0.0" --notes-file release-notes.md
