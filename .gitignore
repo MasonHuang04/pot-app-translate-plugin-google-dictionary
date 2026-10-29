@@ -1,5 +1,0 @@
-dist/
-node_modules/
-*.potext
-!downloads/*.potext
-.DS_Store
