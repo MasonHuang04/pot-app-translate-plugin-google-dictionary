@@ -1,0 +1,56 @@
+{
+  "id": "plugin.local.google-dictionary",
+  "plugin_type": "translate",
+  "version": "1.0.0",
+  "icon": "dictionary.svg",
+  "display": "Google Translate 词典增强",
+  "homepage": "https://github.com/MasonHuang04/pot-app-translate-plugin-google-dictionary",
+  "needs": [
+    {
+      "key": "requestPath",
+      "display": "请求地址（选填，默认 translate.google.com）",
+      "type": "input"
+    },
+    {
+      "key": "outputFormat",
+      "display": "结果显示",
+      "type": "select",
+      "options": {
+        "dictionary": "词典卡片（默认）",
+        "text": "完整文本（支持复制）"
+      }
+    }
+  ],
+  "language": {
+    "auto": "auto",
+    "zh_cn": "zh-CN",
+    "zh_tw": "zh-TW",
+    "ja": "ja",
+    "en": "en",
+    "ko": "ko",
+    "fr": "fr",
+    "es": "es",
+    "ru": "ru",
+    "de": "de",
+    "it": "it",
+    "tr": "tr",
+    "pt_pt": "pt",
+    "pt_br": "pt",
+    "vi": "vi",
+    "id": "id",
+    "th": "th",
+    "ms": "ms",
+    "ar": "ar",
+    "hi": "hi",
+    "mn_cy": "mn",
+    "km": "km",
+    "nb_no": "no",
+    "nn_no": "no",
+    "fa": "fa",
+    "sv": "sv",
+    "pl": "pl",
+    "nl": "nl",
+    "uk": "uk",
+    "he": "he"
+  }
+}
