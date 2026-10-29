@@ -6,6 +6,10 @@
 
 **当前状态：实验版本。25 项离线测试通过；Google 接口验证遇到 HTTP 429，真实联网查询和 Pot 界面中的端到端效果尚未验收。**
 
+## 文件上传状态
+
+当前仓库已提交本说明文档；源码、测试、打包脚本和安装包已在本地准备好，尚未上传。以下为完整文件上传后的使用说明，复现命令需取得源码后运行。
+
 ## 为什么是独立仓库
 
 Pot 已提供正式的翻译插件接口，可以加载独立的 `.potext` 文件，并直接显示结构化词典结果。因此，这个项目不需要 fork 或修改 Pot 主程序。
@@ -16,7 +20,7 @@ Pot 内置 Google 服务已经有基础词典模式；本项目补充更完整�
 
 ## 安装
 
-先[下载 `.potext` 安装包](https://github.com/MasonHuang04/pot-app-translate-plugin-google-dictionary/raw/refs/heads/main/downloads/plugin.local.google-dictionary.potext)，或用下文命令从源码打包。
+安装文件名为 `plugin.local.google-dictionary.potext`。安装包上传完成后会补充仓库下载入口；也可以在取得完整源码后自行打包。
 
 1. 打开 Pot 的「偏好设置 → 服务设置 → 翻译 → 添加外部插件」。
 2. 点击「安装外部插件」，选择 `plugin.local.google-dictionary.potext`。
@@ -76,6 +80,6 @@ GOOGLE_TRANSLATE_BASE_URL=https://your-service.example npm run test:live
 - [Pot 插件加载器](https://github.com/pot-app/pot-desktop/blob/594d32ede96acd106b0256deaa8bb440ffcdff40/src/utils/invoke_plugin.js)。
 - [Raycast Dictionary Google 引擎](https://github.com/raycast/extensions/blob/main/extensions/dictionary/src/engines/googl.ts)、[VS Code Translation Google 接口](https://github.com/caiqichang/vsc-translation/blob/master/src/api/google-api.ts)：用于交叉核对 Google 的 JSON 响应字段。
 
-仓库的 `downloads/` 目录提供当前安装包，其他文件为完整源码、测试和打包脚本。更新代码后，应重新打包并更新该安装包。
+计划将当前安装包放入 `downloads/`，并提交完整源码、测试和打包脚本。当前上传状态见文档开头。
 
-许可证：GPL-3.0-only，见 `LICENSE`。
+源码按 GPL-3.0-only 许可交付，许可证全文将随源码一并上传。
